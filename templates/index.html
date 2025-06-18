@@ -1,0 +1,2474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyAI - AI-Powered Learning Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Reset and Variables */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #5b21b6; /* Softer purple for modern aesthetic */
+            --primary-dark: #4c1d95;
+            --secondary: #f472b6; /* Vibrant pink for contrast */
+            --accent: #34d399; /* Emerald green for highlights */
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --success: #10b981;
+            --dark: #0f172a; /* Slate for text and dark elements */
+            --light: #f8fafc;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --glass: rgba(255, 255, 255, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #6d28d9 0%, #ec4899 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            overflow-x: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(145deg, #1e293b 0%, #334155 100%);
+            color: #e2e8f0;
+        }
+
+        /* Header Styles */
+        .header {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 8rem 2rem 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 5rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #a5f3fc 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+        }
+
+        .hero .btn-primary {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            background: var(--gradient);
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .hero .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: var(--transition);
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 3.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.01);
+        }
+
+        .upload-icon {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .upload-text {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .upload-info {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.95rem;
+        }
+
+        .text-input {
+            width: 100%;
+            height: 140px;
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            transition: var(--transition);
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-md);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .feature-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* Specific Feature Colors */
+        .flashcard-card .feature-icon { color: #f87171; }
+        .mindmap-card .feature-icon { color: #2dd4bf; }
+        .learning-card .feature-icon { color: #facc15; }
+        .sticky-card .feature-icon { color: #fb7185; }
+        .exam-card .feature-icon { color: #34d399; }
+        .youtube-card .feature-icon { color: #ff0000; }
+        .doc-qna-card .feature-icon { color: #a78bfa; }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+            margin-top: 4rem;
+        }
+
+        /* Quiz Interface */
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2.5rem;
+            max-width: 960px;
+            margin: 0 auto 2.5rem;
+            transition: var(--transition);
+        }
+
+        .question-card {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .question-number {
+            background: var(--gradient);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .option-btn {
+            padding: 1.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 1rem;
+            text-align: left;
+            position: relative;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .option-btn.correct {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+            transform: scale(1.03);
+            animation: correctPulse 0.5s ease;
+        }
+
+        .option-btn.incorrect {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+            animation: incorrectShake 0.5s ease;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1.03); }
+            50% { transform: scale(1.08); }
+        }
+
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        .explanation {
+            background: #f1f5f9;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-top: 2rem;
+            display: none;
+            border-left: 4px solid var(--primary);
+            animation: slideIn 0.5s ease;
+        }
+
+        /* Flashcard Interface */
+        .flashcards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            perspective: 1200px;
+        }
+
+        .flashcard {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            transition: var(--transition);
+            min-height: 280px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            min-height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border-radius: 16px;
+        }
+
+        .flashcard-back {
+            background: var(--gradient);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Mind Map Styles */
+        .mindmap-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            min-height: 650px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mindmap-svg {
+            width: 100%;
+            height: 650px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .mindmap-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 650px;
+        }
+
+        .mindmap-node {
+            position: absolute;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .mindmap-node:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .mindmap-node.central {
+            font-size: 1.4rem;
+            padding: 1.5rem 2rem;
+            border-width: 3px;
+            transform: scale(1.1);
+        }
+
+        .mindmap-node.level-2 {
+            font-size: 0.95rem;
+            padding: 0.8rem 1.2rem;
+        }
+
+        /* Learning Path Interface (Styling from provided code) */
+        .learning-path {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .learning-step {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .learning-step:hover {
+            transform: translateX(10px);
+        }
+
+        .step-number {
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Sticky Notes Interface (Styling from provided code) */
+        .sticky-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .sticky-note {
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            transform: rotate(-2deg);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .sticky-note:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .sticky-note:hover {
+            transform: rotate(0deg) scale(1.05);
+            z-index: 10;
+        }
+
+        .sticky-note.red {
+            background: linear-gradient(135deg, #ff6b6b, #ff5252);
+            color: white;
+        }
+
+        .sticky-note.yellow {
+            background: linear-gradient(135deg, #ffd54f, #ffcc02);
+            color: #333;
+        }
+
+        .sticky-note.green {
+            background: linear-gradient(135deg, #66bb6a, #4caf50);
+            color: white;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(-2deg); }
+        }
+
+        /* Exam Questions */
+        .exam-questions {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .exam-question {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .exam-question:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .question-type-badge {
+            position: absolute;
+            top: -12px;
+            right: 24px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .short-answer { background: var(--primary); }
+        .long-answer { background: var(--warning); }
+        .hots { background: var(--danger); }
+
+        .probability-score {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 12px;
+        }
+
+        .probability-bar {
+            flex: 1;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .probability-fill {
+            height: 100%;
+            background: var(--gradient);
+            transition: width 1s ease;
+            border-radius: 4px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 3rem; }
+            .features-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+            .container { padding: 6rem 1.5rem 2rem; }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .options-grid { grid-template-columns: 1fr; }
+            .nav-links { gap: 1.5rem; }
+            .container { padding: 6rem 1rem 2rem; }
+        }
+
+        /* Utility Classes */
+        .btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .text-center { text-align: center; }
+        .mt-2 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .hidden { display: none; }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: white;
+            max-height: 60vh;
+            overflow-y: auto;
+            margin: 5% auto;
+            padding: 2.5rem;
+            padding-right: 10px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 640px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            animation: modalFadeIn 0.4s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close {
+            color: #64748b;
+            float: right;
+            font-size: 1.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close:hover {
+            color: var(--dark);
+        }
+
+        .video-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin: 1rem 0;
+            transition: var(--transition);
+        }
+
+        .video-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(91, 33, 182, 0.1);
+        }
+
+        .video-preview {
+            display: none;
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid #e5e7eb;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            max-width: 320px;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .video-info h4 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .video-info p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* Video Summary Styles */
+        .video-summary-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2.5rem;
+        }
+
+        .video-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: flex-start;
+        }
+
+        .video-thumbnail-large {
+            width: 240px;
+            height: 135px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .video-details h3 {
+            color: var(--dark);
+            margin-bottom: 0.75rem;
+            font-size: 1.4rem;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-badge {
+            background: var(--gradient);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .summary-content {
+            background: rgba(91, 33, 182, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .summary-content h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Dark Mode Adjustments */
+        body.dark-mode .quiz-container,
+        body.dark-mode .flashcard,
+        body.dark-mode .mindmap-container,
+        body.dark-mode .exam-question,
+        body.dark-mode .video-summary-container,
+        body.dark-mode .modal-content {
+            background: #1e293b;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .question-text,
+        body.dark-mode .video-details h3,
+        body.dark-mode .flashcard-front div {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .option-btn,
+        body.dark-mode .flashcard-front {
+            background: #334155;
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .explanation,
+        body.dark-mode .video-preview {
+            background: #334155;
+            border-color: #475569;
+        }
+
+        /* User Profile Styles */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            min-width: 200px;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: var(--dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .dropdown-item:hover {
+            background: var(--light);
+        }
+
+        .login-btn {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .login-btn:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+        }
+
+        /* Documents Modal Styles */
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .document-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .document-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .doc-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .feature-btn {
+            padding: 0.5rem;
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+        }
+
+        .feature-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .feature-btn.generated {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .feature-btn.generated:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="#" class="logo">
+                <i class="fas fa-brain"></i> StudyAI
+            </a>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="/groups" class="nav-link">Study Groups</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                
+                <!-- User Profile Dropdown -->
+                <div class="user-profile" id="userProfile" style="display: none;">
+                    <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
+                    <span id="userName"></span>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="#" class="dropdown-item" onclick="viewAccount()">
+                            <i class="fas fa-user"></i> My Account
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="viewMyDocuments()">
+                            <i class="fas fa-folder"></i> My Documents
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Login Button -->
+                <button class="login-btn" id="loginBtn" onclick="login()">
+                    <i class="fab fa-google"></i> Sign in with Google
+                </button>
+                
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- My Documents Modal -->
+    <div id="documentsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDocumentsModal()">×</span>
+            <h2 class="text-center">
+                <i class="fas fa-folder" style="color: var(--primary);"></i> My Documents
+            </h2>
+            <div id="documentsContainer">
+                <!-- Documents will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Revolutionize Your Learning with AI</h1>
+            <p>Upload your notes or YouTube videos to instantly create flashcards, mind maps, quizzes, and personalized study plans powered by advanced AI.</p>
+            <a href="#features" class="btn btn-primary">
+                <i class="fas fa-rocket"></i> Explore Features
+            </a>
+        </section>
+
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-text">
+                    Drag & Drop or Click to Upload
+                </div>
+                <div class="upload-info">
+                    Supports PDF, DOCX, TXT, MD files
+                </div>
+            </div>
+            <input type="file" id="fileInput" style="display: none;" accept=".pdf,.docx,.txt,.md">
+            
+            <div class="mt-2">
+                <textarea id="textInput" class="text-input" placeholder="Or paste your text content here..." rows="6"></textarea>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <section class="features-grid" id="features">
+            <!-- Smart Revision Mode -->
+            <div class="feature-card flashcard-card" onclick="generateContent('flashcards')">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="feature-title">Smart Revision Mode</h3>
+                <p class="feature-description">
+                    Generate interactive flashcards and MCQ quizzes from your notes for efficient revision and self-assessment.
+                </p>
+            </div>
+
+            <!-- Mind Map Generator -->
+            <div class="feature-card mindmap-card" onclick="generateContent('mindmap')">
+                <div class="feature-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <h3 class="feature-title">Mind Map Generator</h3>
+                <p class="feature-description">
+                    Create stunning, interactive mind maps to visualize and connect concepts effortlessly.
+                </p>
+            </div>
+
+            <!-- Learning Path -->
+            <div class="feature-card learning-card" onclick="generateContent('learning-path')">
+                <div class="feature-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <h3 class="feature-title">Learning Path Generator</h3>
+                <p class="feature-description">
+                    Receive a tailored study plan to master topics in the most effective order.
+                </p>
+            </div>
+
+            <!-- Smart Sticky Notes -->
+            <div class="feature-card sticky-card" onclick="generateContent('sticky-notes')">
+                <div class="feature-icon">
+                    <i class="fas fa-sticky-note"></i>
+                </div>
+                <h3 class="feature-title">Smart Sticky Notes</h3>
+                <p class="feature-description">
+                    AI-generated, color-coded notes for critical facts, important concepts, and bonus information.
+                </p>
+            </div>
+
+            <!-- Exam Booster -->
+            <div class="feature-card exam-card" onclick="generateContent('exam-questions')">
+                <div class="feature-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3 class="feature-title">Exam Booster Mode</h3>
+                <p class="feature-description">
+                    Predict high-probability exam questions with categorized types and probability scores.
+                </p>
+            </div>
+
+            <!-- YouTube Video Summarizer -->
+            <div class="feature-card youtube-card" onclick="openYouTubeModal()">
+                <div class="feature-icon">
+                    <i class="fab fa-youtube"></i>
+                </div>
+                <h3 class="feature-title">YouTube Summarizer</h3>
+                <p class="feature-description">
+                    Summarize educational YouTube videos instantly and generate study materials from them.
+                </p>
+            </div>
+
+            <!-- Document Q&A Feature -->
+            <div class="feature-card doc-qna-card" onclick="window.location.href='/doc-chat'">
+                <div class="feature-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="feature-title">Document Q&A</h3>
+                <p class="feature-description">
+                    Chat with your uploaded documents, PDFs, or web links using advanced AI retrieval.
+                </p>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="results-section">
+            <!-- Dynamic content will be loaded here -->
+        </section>
+    </div>
+
+    <!-- YouTube Modal -->
+    <div id="youtubeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeYouTubeModal()">×</span>
+            <h2 class="text-center">
+                <i class="fab fa-youtube" style="color: #ff0000;"></i> YouTube Video Summarizer
+            </h2>
+            <p class="text-center mb-2" style="color: #64748b;">
+                Paste a YouTube video URL to generate an AI-powered summary
+            </p>
+            
+            <input type="url" id="youtubeUrl" class="video-input" 
+                   placeholder="https://www.youtube.com/watch?v=..." 
+                   onpaste="setTimeout(previewVideo, 100)">
+            
+            <div id="videoPreview" class="video-preview">
+                <img id="videoThumbnail" class="video-thumbnail" alt="Video thumbnail">
+                <div class="video-info">
+                    <h4 id="videoTitle">Video Title</h4>
+                    <p id="videoDetails">Duration • Channel</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-2">
+                <button class="btn btn-primary" onclick="summarizeVideo()" id="summarizeBtn">
+                    <i class="fab fa-youtube"></i> Summarize Video
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentUser = null;
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+
+        // Initialize theme
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.theme-toggle i').classList.replace('fa-moon', 'fa-sun');
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            const icon = document.querySelector('.theme-toggle i');
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
+        }
+
+        // File upload handling
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const fileName = file.name;
+                document.querySelector('.upload-text').textContent = `Selected: ${fileName}`;
+                document.querySelector('.upload-area').style.borderColor = '#34d399';
+            }
+        });
+
+        // Toggle dropdown menu
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Generate content function
+        async function generateContent(type) {
+            const fileInput = document.getElementById('fileInput');
+            const textInput = document.getElementById('textInput');
+            
+            if (!fileInput.files[0] && !textInput.value.trim()) {
+                alert('Please upload a file or enter some text first!');
+                return;
+            }
+
+            showLoading(type);
+
+            try {
+                const formData = new FormData();
+                if (fileInput.files[0]) {
+                    formData.append('file', fileInput.files[0]);
+                }
+                if (textInput.value.trim()) {
+                    formData.append('text', textInput.value.trim());
+                }
+
+                // Check if user is logged in for persistent storage
+                if (currentUser && fileInput.files[0]) {
+                    // Upload document first
+                    const uploadFormData = new FormData();
+                    uploadFormData.append('file', fileInput.files[0]);
+                    
+                    const uploadResponse = await fetch('/api/upload-document', {
+                        method: 'POST',
+                        body: uploadFormData,
+                        credentials: 'include'
+                    });
+                    
+                    if (uploadResponse.ok) {
+                        const uploadData = await uploadResponse.json();
+                        
+                        // Generate feature for the uploaded document
+                        const generateFormData = new FormData();
+                        generateFormData.append('document_id', uploadData.document_id);
+                        
+                        const response = await fetch(`/api/generate-${type}-auth`, {
+                            method: 'POST',
+                            body: generateFormData,
+                            credentials: 'include'
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        displayResults(type, data);
+                        
+                        // Show success message
+                        setTimeout(() => {
+                            alert('✅ Content saved to your account! View it anytime from "My Documents".');
+                        }, 1000);
+                        
+                        return;
+                    }
+                }
+                
+                // Fallback to temporary generation
+                const endpoint = `/api/generate-${type}`;
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayResults(type, data);
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while generating content. Please try again.');
+                hideLoading();
+            }
+        }
+
+        // Show loading state
+        function showLoading(type) {
+            const resultsSection = document.getElementById('results-section');
+            resultsSection.style.display = 'block';
+            resultsSection.innerHTML = `
+                <div class="text-center" style="padding: 3rem; background: var(--glass); border-radius: 20px; backdrop-filter: blur(12px);">
+                    <div class="loading" style="margin: 0 auto 1rem;"></div>
+                    <h3 style="color: white;">Generating ${type.replace('-', ' ')}...</h3>
+                    <p style="color: rgba(255, 255, 255, 0.7);">Please wait while our AI processes your content</p>
+                </div>
+            `;
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Hide loading state
+        function hideLoading() {
+            document.getElementById('results-section').style.display = 'none';
+        }
+
+        // Display results
+        function displayResults(type, data) {
+            const resultsSection = document.getElementById('results-section');
+            let html = '';
+
+            switch(type) {
+                case 'flashcards': html = createFlashcardsHTML(data); break;
+                case 'mcqs': html = createMCQsHTML(data); break;
+                case 'mindmap': html = createMindMapHTML(data); break;
+                case 'learning-path': html = createLearningPathHTML(data); break;
+                case 'sticky-notes': html = createStickyNotesHTML(data); break;
+                case 'exam-questions': html = createExamQuestionsHTML(data); break;
+            }
+
+            resultsSection.innerHTML = html;
+            resultsSection.style.display = 'block';
+            
+            // Animate results
+            setTimeout(() => {
+                resultsSection.querySelectorAll('.animate-in').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+            }, 100);
+        }
+
+        // Create Flashcards HTML
+        function createFlashcardsHTML(flashcards) {
+            let html = `
+                <div style="background: var(--glass); backdrop-filter: blur(12px); border-radius: 20px; padding: 2.5rem;">
+                    <h2 class="text-center" style="color: white; margin-bottom: 2rem;">
+                        <i class="fas fa-brain" style="color: #f87171;"></i> Smart Flashcards
+                    </h2>
+                    <p class="text-center" style="color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem;">
+                        Click cards to flip and reveal answers
+                    </p>
+                    <div class="flashcards-grid">
+            `;
+
+            flashcards.forEach((card, index) => {
+                html += `
+                    <div class="flashcard animate-in" style="opacity: 0; transform: translateY(20px);" onclick="flipCard(this)">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div>
+                                    <div style="font-weight: 600; color: #333; font-size: 1.1rem; line-height: 1.5;">
+                                        ${card.question}
+                                    </div>
+                                    <div style="position: absolute; top: 15px; right: 15px; background: ${getDifficultyColor(card.difficulty)}; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.7rem; font-weight: 600;">
+                                        ${card.difficulty.toUpperCase()}
+                                    </div>
+                                    <div style="position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); color: #999; font-size: 0.8rem;">
+                                        <i class="fas fa-sync-alt"></i> Click to flip
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flashcard-back">
+                                <div style="font-weight: 500; line-height: 1.6;">
+                                    ${card.answer}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                    <div class="text-center mt-2">
+                        <button class="btn btn-primary" onclick="generateContent('mcqs')" style="margin-right: 1rem;">
+                            <i class="fas fa-question-circle"></i> Generate Quiz
+                        </button>
+                        <button class="btn" style="background: var(--accent); color: white;" onclick="shuffleFlashcards()">
+                            <i class="fas fa-random"></i> Shuffle Cards
+                        </button>
+                    </div>
+                </div>
+            `;
+            return html;
+        }
+
+        // Create MCQs HTML
+        function createMCQsHTML(mcqs) {
+            let html = `
+                <div style="background: var(--glass); backdrop-filter: blur(12px); border-radius: 20px; padding: 2.5rem;">
+                    <h2 class="text-center" style="color: white; margin-bottom: 2rem;">
+                        <i class="fas fa-question-circle" style="color: #2dd4bf;"></i> Interactive Quiz
+                    </h2>
+            `;
+
+            mcqs.forEach((mcq, index) => {
+                html += `
+                    <div class="quiz-container animate-in" style="opacity: 0; transform: translateY(20px);">
+                        <div class="question-card">
+                            <div class="question-number">Question ${index + 1} of ${mcqs.length}</div>
+                            <div class="question-text">${mcq.question}</div>
+                            <div class="options-grid">
+                `;
+
+                mcq.options.forEach((option, optIndex) => {
+                    html += `
+                        <button class="option-btn" onclick="selectAnswer(this, ${optIndex}, ${mcq.correct_answer}, '${mcq.explanation.replace(/'/g, "\\'")}', ${index})">
+                            <span style="font-weight: bold; margin-right: 0.5rem;">${String.fromCharCode(65 + optIndex)}.</span>
+                            ${option}
+                        </button>
+                    `;
+                });
+
+                html += `
+                            </div>
+                            <div class="explanation" id="explanation-${index}">
+                                <h4 style="color: var(--primary); margin-bottom: 1rem;">
+                                    <i class="fas fa-lightbulb"></i> Explanation
+                                </h4>
+                                <p>${mcq.explanation}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            return html;
+        }
+
+        // Create Mind Map HTML
+        function createMindMapHTML(mindmap) {
+            let html = `
+                <div style="background: var(--glass); backdrop-filter: blur(12px); border-radius: 20px; padding: 2.5rem;">
+                    <h2 class="text-center" style="color: white; margin-bottom: 2rem;">
+                        <i class="fas fa-project-diagram" style="color: #facc15;"></i> ${mindmap.title}
+                    </h2>
+                    <div class="mindmap-container animate-in" style="opacity: 0; transform: translateY(20px);">
+                        <svg class="mindmap-svg" viewBox="0 0 800 650"></svg>
+                        <div class="mindmap-content">
+                            <div class="mindmap-node central" style="top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--primary);">
+                                ${mindmap.title}
+                            </div>
+            `;
+
+            if (mindmap.nodes && mindmap.nodes.length > 0) {
+                const centerX = 400;
+                const centerY = 325;
+                const radius = 220;
+                
+                mindmap.nodes.forEach((node, index) => {
+                    const angle = (index * 2 * Math.PI) / mindmap.nodes.length;
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+                    const xPercent = (x / 800) * 100;
+                    const yPercent = (y / 650) * 100;
+
+                    html += `
+                        <div class="mindmap-node" style="top: ${yPercent}%; left: ${xPercent}%; background: ${node.color || 'var(--secondary)'}; transform: translate(-50%, -50%);" data-id="${node.id}">
+                            ${node.label}
+                        </div>
+                    `;
+
+                    if (node.children && node.children.length > 0) {
+                        node.children.forEach((child, childIndex) => {
+                            const childAngle = angle + ((childIndex - (node.children.length - 1) / 2) * 0.8);
+                            const childRadius = radius + 140;
+                            const childX = centerX + childRadius * Math.cos(childAngle);
+                            const childY = centerY + childRadius * Math.sin(childAngle);
+                            const childXPercent = (childX / 800) * 100;
+                            const childYPercent = (childY / 650) * 100;
+
+                            html += `
+                                <div class="mindmap-node level-2" style="top: ${childYPercent}%; left: ${childXPercent}%; background: ${child.color || '#2dd4bf'}; transform: translate(-50%, -50%);" data-id="${child.id}">
+                                    ${child.label}
+                                </div>
+                            `;
+                        });
+                    }
+                });
+            }
+            html += `
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            setTimeout(() => drawMindMapConnections(mindmap), 100);
+            return html;
+        }
+
+        // Draw Mind Map Connections
+        function drawMindMapConnections(mindmap) {
+            const svg = document.querySelector('.mindmap-svg');
+            if (!svg) return;
+
+            const centerX = 400;
+            const centerY = 325;
+            const radius = 220;
+            let connections = '';
+
+            if (mindmap.nodes) {
+                mindmap.nodes.forEach((node, index) => {
+                    const angle = (index * 2 * Math.PI) / mindmap.nodes.length;
+                    const x = centerX + radius * Math.cos(angle);
+                    const y = centerY + radius * Math.sin(angle);
+
+                    connections += `
+                        <line x1="${centerX}" y1="${centerY}" x2="${x}" y2="${y}" 
+                              stroke="var(--primary)" stroke-width="3" opacity="0.7" 
+                              stroke-dasharray="5,5">
+                            <animate attributeName="stroke-dashoffset" 
+                                     values="0;-10" dur="1s" repeatCount="indefinite"/>
+                        </line>
+                    `;
+
+                    if (node.children) {
+                        node.children.forEach((child, childIndex) => {
+                            const childAngle = angle + ((childIndex - (node.children.length - 1) / 2) * 0.8);
+                            const childRadius = radius + 140;
+                            const childX = centerX + childRadius * Math.cos(childAngle);
+                            const childY = centerY + childRadius * Math.sin(childAngle);
+
+                            connections += `
+                                <line x1="${x}" y1="${y}" x2="${childX}" y2="${childY}" 
+                                      stroke="${node.color || 'var(--secondary)'}" stroke-width="2" opacity="0.6"/>
+                            `;
+                        });
+                    }
+                });
+            }
+
+            svg.innerHTML = connections;
+        }
+
+        // Create Learning Path HTML
+        function createLearningPathHTML(learningPath) {
+            let html = `
+                <div style="background: var(--glass); backdrop-filter: blur(12px); border-radius: 20px; padding: 2.5rem;">
+                    <h2 class="text-center" style="color: white; margin-bottom: 2rem;">
+                        <i class="fas fa-route" style="color: #facc15;"></i> Your Learning Path
+                    </h2>
+                    <div class="learning-path">
+            `;
+
+            learningPath.forEach((step, index) => {
+                html += `
+                    <div class="learning-step animate-in" style="opacity: 0; transform: translateY(30px);">
+                        <div class="step-number">${step.step_number}</div>
+                        <h3 style="color: #333; margin-bottom: 0.5rem;">${step.title}</h3>
+                        <p style="color: #666; margin-bottom: 1rem;">${step.description}</p>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <span style="background: #e0e7ff; color: #3730a3; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">
+                                <i class="fas fa-clock"></i> ${step.estimated_time}
+                            </span>
+                            ${step.prerequisites && step.prerequisites.length > 0 ? `
+                                <span style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">
+                                    <i class="fas fa-exclamation-circle"></i> Prerequisites: ${step.prerequisites.join(', ')}
+                                </span>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // Create Sticky Notes HTML
+        function createStickyNotesHTML(stickyNotes) {
+            let html = `
+                <div style="background: var(--glass); backdrop-filter: blur(12px); border-radius: 20px; padding: 2.5rem;">
+                    <h2 class="text-center" style="color: white; margin-bottom: 2rem;">
+                        <i class="fas fa-sticky-note" style="color: #fb7185;"></i> Smart Sticky Notes
+                    </h2>
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <span style="background: #ff6b6b; color: white; padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem; font-size: 0.9rem;">
+                            🔴 Must Memorize
+                        </span>
+                        <span style="background: #ffd54f; color: #333; padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem; font-size: 0.9rem;">
+                            🟡 Good to Know
+                        </span>
+                        <span style="background: #66bb6a; color: white; padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem; font-size: 0.9rem;">
+                            🟢 Bonus/Extra
+                        </span>
+                    </div>
+                    <div class="sticky-grid">
+            `;
+
+            stickyNotes.forEach((note, index) => {
+                html += `
+                    <div class="sticky-note ${note.category} animate-in" style="opacity: 0; transform: translateY(30px); animation-delay: ${index * 0.1}s;" onclick="expandSticky(this)">
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">
+                            Priority: ${note.priority}/10
+                        </div>
+                        <div>${note.content}</div>
+                        <div style="margin-top: 1rem; opacity: 0.8;">
+                            ${note.tags ? note.tags.map(tag => `<span style="background: rgba(255,255,255,0.2); padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.7rem; margin-right: 0.25rem;">#${tag}</span>`).join('') : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+            return html;
+        }
+
+        // Create Exam Questions HTML
+        function createExamQuestionsHTML(examQuestions) {
+            let html = `
+                <div style="background: var(--glass); backdrop-filter: blur(12px); border-radius: 20px; padding: 2.5rem;">
+                    <h2 class="text-center" style="color: white; margin-bottom: 2rem;">
+                        <i class="fas fa-trophy" style="color: #34d399;"></i> Exam Booster
+                    </h2>
+                    <div class="exam-questions">
+            `;
+
+            examQuestions.forEach((question, index) => {
+                const probability = Math.round(question.probability_score * 100);
+                html += `
+                    <div class="exam-question animate-in" style="opacity: 0; transform: translateY(20px);">
+                        <div class="question-type-badge ${question.type}">
+                            ${question.type.replace('_', ' ').toUpperCase()}
+                        </div>
+                        <h3 style="color: #333; margin-bottom: 1rem; padding-right: 100px;">${question.question}</h3>
+                        <div class="probability-score">
+                            <span style="font-weight: 600; color: #666;">Probability:</span>
+                            <div class="probability-bar">
+                                <div class="probability-fill" style="width: ${probability}%"></div>
+                            </div>
+                            <span style="font-weight: 600; color: ${probability > 70 ? '#ef4444' : probability > 50 ? '#f59e0b' : '#10b981'};">${probability}%</span>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            ${question.keywords ? question.keywords.map(keyword => `<span style="background: #e0e7ff; color: #3730a3; padding: 0.25rem 0.5rem; border-radius: 10px; font-size: 0.8rem; margin-right: 0.5rem;">${keyword}</span>`).join('') : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div></div>`;
+            return html;
+        }
+
+        // Missing Utility Functions
+        function flipCard(card) {
+            card.classList.toggle('flipped');
+        }
+
+        function shuffleFlashcards() {
+            const container = document.querySelector('.flashcards-grid');
+            if (!container) return;
+            
+            const cards = Array.from(container.children);
+            
+            // Shuffle array
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+            }
+            
+            // Reappend shuffled cards with animation
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                container.appendChild(card);
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }
+
+        function selectAnswer(button, selectedIndex, correctIndex, explanation, questionIndex) {
+            const options = button.parentElement.querySelectorAll('.option-btn');
+            const explanationDiv = document.getElementById(`explanation-${questionIndex}`);
+            
+            // Disable all options
+            options.forEach((option, index) => {
+                option.disabled = true;
+                option.style.pointerEvents = 'none';
+                if (index === correctIndex) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && index !== correctIndex) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Show explanation after animation
+            setTimeout(() => {
+                explanationDiv.style.display = 'block';
+                explanationDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 600);
+        }
+
+        function getDifficultyColor(difficulty) {
+            return {
+                easy: '#34d399',
+                medium: '#f59e0b',
+                hard: '#f87171'
+            }[difficulty] || '#6b7280';
+        }
+
+        function expandSticky(sticky) {
+            if (sticky.style.transform.includes('scale(1.2)')) {
+                sticky.style.transform = sticky.style.transform.replace('scale(1.2)', '');
+                sticky.style.zIndex = '1';
+            } else {
+                sticky.style.transform += ' scale(1.2)';
+                sticky.style.zIndex = '20';
+            }
+        }
+
+        // Enhanced authentication functions with better error handling
+        function showUserProfile(user) {
+            document.getElementById('loginBtn').style.display = 'none';
+            const userProfile = document.getElementById('userProfile');
+            userProfile.style.display = 'flex';
+            
+            document.getElementById('userAvatar').src = user.picture || '/static/default-avatar.png';
+            document.getElementById('userName').textContent = user.name;
+            
+            // Add click handler for dropdown
+            userProfile.onclick = function(e) {
+                e.stopPropagation();
+                toggleDropdown();
+            };
+            
+            console.log('✅ User profile displayed:', user.name);
+        }
+        
+        function showLoginButton() {
+            document.getElementById('loginBtn').style.display = 'flex';
+            document.getElementById('userProfile').style.display = 'none';
+        }
+        
+        function login() {
+            window.location.href = '/auth/login';
+        }
+        
+        function closeDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            if (dropdown) {
+                dropdown.style.display = 'none';
+            }
+        }
+        
+        function viewAccount() {
+            closeDropdown();
+            alert('Account management coming soon!');
+        }
+        
+        async function logout() {
+            try {
+                closeDropdown();
+                
+                const response = await fetch('/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    currentUser = null;
+                    showLoginButton();
+                    
+                    // Clear any cached data
+                    localStorage.removeItem('userData');
+                    
+                    // Redirect to home
+                    window.location.href = '/';
+                } else {
+                    throw new Error('Logout failed');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+                alert('Logout failed. Please try again.');
+            }
+        }
+
+        async function checkAuthStatus() {
+            try {
+                const response = await fetch('/api/user/profile');
+                const data = await response.json();
+                
+                if (data.user) {
+                    currentUser = data.user;
+                    showUserProfile(data.user);
+                    
+                    // Clear any error messages on successful auth
+                    clearAuthErrors();
+                } else {
+                    showLoginButton();
+                    
+                    // Check for error messages in URL
+                    handleAuthErrors();
+                }
+            } catch (error) {
+                console.error('Error checking auth status:', error);
+                showLoginButton();
+            }
+        }
+
+        function handleAuthErrors() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            const retry = urlParams.get('retry');
+            const message = urlParams.get('message');
+            
+            if (error) {
+                let errorMessage = '';
+                switch (error) {
+                    case 'access_denied':
+                        errorMessage = message || '🚫 Access denied. You need to grant permission to continue with Google authentication.';
+                        break;
+                    case 'state_mismatch':
+                        errorMessage = '🔄 Authentication session expired. Please try signing in again.';
+                        if (retry === 'true') {
+                            // Auto-retry after state mismatch
+                            setTimeout(() => {
+                                window.history.replaceState({}, document.title, "/");
+                                console.log('🔄 Auto-retrying login after state mismatch...');
+                            }, 2000);
+                        }
+                        break;
+                    case 'auth_failed':
+                        errorMessage = '❌ Authentication failed. Please try again.';
+                        break;
+                    case 'token_exchange_failed':
+                        errorMessage = '🔄 Token exchange failed. Please try signing in again.';
+                        break;
+                    case 'no_code':
+                        errorMessage = '⚠️ No authorization code received. Please try again.';
+                        break;
+                    case 'oauth_access_denied':
+                        errorMessage = '🚫 Access denied. You need to grant permission to continue.';
+                        break;
+                    case 'no_user_info':
+                        errorMessage = '⚠️ Unable to retrieve user information. Please try again.';
+                        break;
+                    case 'login_failed':
+                        errorMessage = '🔧 Login initialization failed. Please try again.';
+                        break;
+                    default:
+                        errorMessage = '❓ Authentication error occurred. Please try again.';
+                }
+                
+                if (errorMessage) {
+                    showAuthError(errorMessage);
+                    
+                    // Clear error from URL after showing message
+                    setTimeout(() => {
+                        window.history.replaceState({}, document.title, "/");
+                    }, 5000);
+                }
+            }
+        }
+
+        function showAuthError(message) {
+            // Create or update error display
+            let errorDiv = document.getElementById('auth-error');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.id = 'auth-error';
+                errorDiv.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    background: rgba(239, 68, 68, 0.9);
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 8px;
+                    max-width: 300px;
+                    font-size: 0.9rem;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                    backdrop-filter: blur(8px);
+                `;
+                document.body.appendChild(errorDiv);
+            }
+            
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                if (errorDiv) {
+                    errorDiv.style.display = 'none';
+                }
+            }, 10000);
+        }
+
+        function clearAuthErrors() {
+            const errorDiv = document.getElementById('auth-error');
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+            }
+            
+            // Clear URL parameters
+            if (window.location.search.includes('error=')) {
+                window.history.replaceState({}, document.title, "/");
+            }
+        }
+
+        // My Documents Modal Functions
+        async function viewMyDocuments() {
+            closeDropdown();
+            await loadUserDocuments();
+            document.getElementById('documentsModal').style.display = 'block';
+        }
+
+        function closeDocumentsModal() {
+            document.getElementById('documentsModal').style.display = 'none';
+        }
+
+        async function loadUserDocuments() {
+            try {
+                const response = await fetch('/api/user/documents');
+                const data = await response.json();
+                
+                const container = document.getElementById('documentsContainer');
+                
+                if (data.documents.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center" style="padding: 2rem;">
+                            <i class="fas fa-folder-open" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                            <h3 style="color: #666; margin-bottom: 1rem;">No documents uploaded yet</h3>
+                            <p style="color: #999;">Upload a document to start generating study materials!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '<div class="documents-grid">';
+                
+                for (const doc of data.documents) {
+                    html += `
+                        <div class="document-card">
+                            <div class="doc-icon">
+                                <i class="fas fa-file-${getFileIcon(doc.file_type)}"></i>
+                            </div>
+                            <h4 title="${doc.filename}">${doc.filename.length > 25 ? doc.filename.substring(0, 25) + '...' : doc.filename}</h4>
+                            <p style="color: #666; font-size: 0.85rem;">Uploaded: ${new Date(doc.uploaded_at).toLocaleDateString()}</p>
+                            <div class="feature-buttons">
+                    `;
+                    
+                    const features = [
+                        { key: 'flashcards', icon: 'brain', name: 'Flashcards' },
+                        { key: 'mcqs', icon: 'question-circle', name: 'Quiz' },
+                        { key: 'mindmap', icon: 'project-diagram', name: 'Mind Map' },
+                        { key: 'learning-path', icon: 'route', name: 'Learning Path' },
+                        { key: 'sticky-notes', icon: 'sticky-note', name: 'Sticky Notes' },
+                        { key: 'exam-questions', icon: 'trophy', name: 'Exam Questions' }
+                    ];
+                    
+                    for (const feature of features) {
+                        if (doc.features[feature.key]) {
+                            html += `
+                                <button class="feature-btn generated" onclick="viewFeature(${doc.features[feature.key].id}, '${feature.key}')">
+                                    <i class="fas fa-${feature.icon}"></i> View ${feature.name}
+                                </button>
+                            `;
+                        } else {
+                            html += `
+                                <button class="feature-btn" onclick="generateFeature(${doc.id}, '${feature.key}')">
+                                    <i class="fas fa-${feature.icon}"></i> Generate ${feature.name}
+                                </button>
+                            `;
+                        }
+                    }
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                html += '</div>';
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading documents:', error);
+                document.getElementById('documentsContainer').innerHTML = 
+                    '<p class="text-center" style="color: #f87171;">Error loading documents. Please try again.</p>';
+            }
+        }
+
+        function getFileIcon(fileType) {
+            const icons = {
+                'pdf': 'pdf',
+                'docx': 'word',
+                'doc': 'word',
+                'txt': 'alt',
+                'md': 'markdown'
+            };
+            return icons[fileType] || 'file';
+        }
+
+        function getFeatureIcon(featureType) {
+            const icons = {
+                'flashcards': 'brain',
+                'mcqs': 'question-circle',
+                'mindmap': 'project-diagram',
+                'learning-path': 'route',
+                'sticky-notes': 'sticky-note',
+                'exam-questions': 'trophy'
+            };
+            return icons[featureType] || 'file';
+        }
+
+        function getFeatureName(featureType) {
+            const names = {
+                'flashcards': 'Flashcards',
+                'mcqs': 'Quiz',
+                'mindmap': 'Mind Map',
+                'learning-path': 'Learning Path',
+                'sticky-notes': 'Sticky Notes',
+                'exam-questions': 'Exam Questions'
+            };
+            return names[featureType] || 'Feature';
+        }
+
+        async function generateFeature(documentId, featureType) {
+            try {
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+                btn.disabled = true;
+
+                const formData = new FormData();
+                formData.append('document_id', documentId);
+
+                const response = await fetch(`/api/generate-${featureType}-auth`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Close modal and display results
+                closeDocumentsModal();
+                displayResults(featureType, data);
+                
+                // Refresh documents list for next time
+                setTimeout(() => {
+                    loadUserDocuments();
+                }, 1000);
+
+            } catch (error) {
+                console.error('Error generating feature:', error);
+                alert(`Error generating ${featureType.replace('-', ' ')}. Please try again.`);
+            } finally {
+                const btn = event.target;
+                btn.disabled = false;
+                btn.innerHTML = btn.innerHTML.replace('<i class="fas fa-spinner fa-spin"></i> Generating...', `<i class="fas fa-${getFeatureIcon(featureType)}"></i> Generate ${getFeatureName(featureType)}`);
+            }
+        }
+
+        async function viewFeature(featureId, featureType) {
+            try {
+                const response = await fetch(`/api/user/features/${featureId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                closeDocumentsModal();
+                displayResults(featureType, data.content);
+                
+            } catch (error) {
+                console.error('Error viewing feature:', error);
+                alert('Error loading feature. Please try again.');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            closeDropdown();
+        });
+
+        // Initialize authentication on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+        });
+
+        // YouTube Modal Functions
+        function openYouTubeModal() {
+            document.getElementById('youtubeModal').style.display = 'block';
+            document.getElementById('youtubeUrl').focus();
+        }
+
+        function closeYouTubeModal() {
+            document.getElementById('youtubeModal').style.display = 'none';
+            document.getElementById('youtubeUrl').value = '';
+            document.getElementById('videoPreview').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('youtubeModal');
+            if (event.target === modal) {
+                closeYouTubeModal();
+            }
+        }
+
+        async function previewVideo() {
+            const urlInput = document.getElementById('youtubeUrl');
+            const url = urlInput.value.trim();
+            
+            if (!url) return;
+            
+            try {
+                const videoId = extractVideoId(url);
+                if (!videoId) {
+                    alert('Please enter a valid YouTube URL');
+                    return;
+                }
+                
+                const response = await fetch(`/api/video-info/${videoId}`);
+                if (!response.ok) throw new Error('Failed to fetch video info');
+                
+                const videoInfo = await response.json();
+                
+                document.getElementById('videoThumbnail').src = videoInfo.thumbnail;
+                document.getElementById('videoTitle').textContent = videoInfo.title;
+                document.getElementById('videoDetails').textContent = 
+                    `${videoInfo.duration} • ${videoInfo.channel}`;
+                document.getElementById('videoPreview').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error previewing video:', error);
+            }
+        }
+
+        function extractVideoId(url) {
+            const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        }
+
+        async function summarizeVideo() {
+            const url = document.getElementById('youtubeUrl').value.trim();
+            const btn = document.getElementById('summarizeBtn');
+            const originalText = btn.innerHTML;
+            
+            if (!url) {
+                alert('Please enter a YouTube URL first');
+                return;
+            }
+            
+            btn.innerHTML = '<div class="loading"></div> Analyzing...';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/summarize-youtube', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to summarize video');
+                }
+                
+                const data = await response.json();
+                closeYouTubeModal();
+                displayVideoSummary(data);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Error: ${error.message}`);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function displayVideoSummary(data) {
+            const resultsSection = document.getElementById('results-section');
+            window.currentVideoSummary = data.summary;
+            
+            // Auto-populate the text area with summary
+            const textInput = document.getElementById('textInput');
+            textInput.value = data.summary;
+            textInput.style.borderColor = '#34d399';
+            textInput.style.background = 'rgba(52, 211, 153, 0.1)';
+            
+            // Scroll to upload section briefly to show the populated text
+            setTimeout(() => {
+                document.querySelector('.upload-section').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+                
+                // Add a visual indicator
+                const uploadSection = document.querySelector('.upload-section');
+                const originalBorder = uploadSection.style.border;
+                uploadSection.style.border = '3px solid #34d399';
+                uploadSection.style.animation = 'pulse 2s ease-in-out';
+                
+                setTimeout(() => {
+                    uploadSection.style.border = originalBorder;
+                    uploadSection.style.animation = '';
+                }, 3000);
+            }, 500);
+            
+            const html = `
+                <div style="background: var(--glass); backdrop-filter: blur(12px); border-radius: 20px; padding: 2.5rem;">
+                    <h2 class="text-center" style="color: white; margin-bottom: 2rem;">
+                        <i class="fab fa-youtube" style="color: #ff0000;"></i> Video Summary
+                    </h2>
+                    <div class="video-summary-container animate-in" style="opacity: 0; transform: translateY(20px);">
+                        <div class="video-header">
+                            <img src="${data.thumbnail}" alt="Video thumbnail" class="video-thumbnail-large" onerror="this.src='https://img.youtube.com/vi/${data.video_id}/maxresdefault.jpg'">
+                            <div class="video-details">
+                                <h3>${data.title.replace(/'/g, "\\'").replace(/"/g, '"')}</h3>
+                                <div class="video-meta">
+                                    <span class="video-badge">${data.duration || 'Unknown Duration'}</span>
+                                    <span class="video-badge">${data.source === 'transcript' ? 'Transcript' : 'Audio Analysis'}</span>
+                                </div>
+                                <p style="color: #64748b; line-height: 1.6;">
+                                    AI-generated summary from ${data.source === 'transcript' ? 'official transcript' : 'audio transcription'}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="summary-content">
+                            <h4><i class="fas fa-file-alt"></i> Summary</h4>
+                            <div style="line-height: 1.8; color: var(--dark);">
+                                ${data.summary.replace(/\n/g, '<br><br>').replace(/'/g, "\\'").replace(/"/g, '"')}
+                            </div>
+                        </div>
+                        <div style="margin-top: 2rem; padding: 2rem; background: rgba(52, 211, 153, 0.1); border-radius: 16px; border: 2px solid #34d399;">
+                            <h4 class="text-center" style="color: #047857; margin-bottom: 1rem;">
+                                <i class="fas fa-check-circle"></i> Summary Added to Text Area
+                            </h4>
+                            <p class="text-center" style="color: #065f46; margin-bottom: 2rem;">
+                                The video summary has been automatically added to the text input area above. 
+                                You can now use any feature below to generate study materials from this content!
+                            </p>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                <button class="btn study-tool-btn" style="background: #f87171; color: white;" onclick="generateContent('flashcards')">
+                                    <i class="fas fa-brain"></i> Generate Flashcards
+                                </button>
+                                <button class="btn study-tool-btn" style="background: #2dd4bf; color: white;" onclick="generateContent('mcqs')">
+                                    <i class="fas fa-question-circle"></i> Generate Quiz
+                                </button>
+                                <button class="btn study-tool-btn" style="background: #facc15; color: #333;" onclick="generateContent('mindmap')">
+                                    <i class="fas fa-project-diagram"></i> Generate Mind Map
+                                </button>
+                                <button class="btn study-tool-btn" style="background: #a78bfa; color: white;" onclick="generateContent('learning-path')">
+                                    <i class="fas fa-route"></i> Generate Learning Path
+                                </button>
+                                <button class="btn study-tool-btn" style="background: #fb7185; color: white;" onclick="generateContent('sticky-notes')">
+                                    <i class="fas fa-sticky-note"></i> Generate Sticky Notes
+                                </button>
+                                <button class="btn study-tool-btn" style="background: #34d399; color: white;" onclick="generateContent('exam-questions')">
+                                    <i class="fas fa-trophy"></i> Generate Exam Questions
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            resultsSection.innerHTML = html;
+            resultsSection.style.display = 'block';
+            
+            setTimeout(() => {
+                const container = resultsSection.querySelector('.animate-in');
+                if (container) {
+                    container.style.opacity = '1';
+                    container.style.transform = 'translateY(0)';
+                }
+            }, 100);
+            
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Remove the old generateFromVideoSummary function and update generateContentFromText
+        async function generateFromVideoSummary(type) {
+            // This function is no longer needed since we're using generateContent directly
+            // with the populated text area
+            await generateContent(type);
+        }
+
+        // Add CSS for pulse animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.02); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Also uncomment the feature generation buttons in the documents modal
+        async function loadUserDocuments() {
+            try {
+                const response = await fetch('/api/user/documents');
+                const data = await response.json();
+                
+                const container = document.getElementById('documentsContainer');
+                
+                if (data.documents.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center" style="padding: 2rem;">
+                            <i class="fas fa-folder-open" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                            <h3 style="color: #666; margin-bottom: 1rem;">No documents uploaded yet</h3>
+                            <p style="color: #999;">Upload a document to start generating study materials!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '<div class="documents-grid">';
+                
+                for (const doc of data.documents) {
+                    html += `
+                        <div class="document-card">
+                            <div class="doc-icon">
+                                <i class="fas fa-file-${getFileIcon(doc.file_type)}"></i>
+                            </div>
+                            <h4 title="${doc.filename}">${doc.filename.length > 25 ? doc.filename.substring(0, 25) + '...' : doc.filename}</h4>
+                            <p style="color: #666; font-size: 0.85rem;">Uploaded: ${new Date(doc.uploaded_at).toLocaleDateString()}</p>
+                            <div class="feature-buttons">
+                    `;
+                    
+                    const features = [
+                        { key: 'flashcards', icon: 'brain', name: 'Flashcards' },
+                        { key: 'mcqs', icon: 'question-circle', name: 'Quiz' },
+                        { key: 'mindmap', icon: 'project-diagram', name: 'Mind Map' },
+                        { key: 'learning-path', icon: 'route', name: 'Learning Path' },
+                        { key: 'sticky-notes', icon: 'sticky-note', name: 'Sticky Notes' },
+                        { key: 'exam-questions', icon: 'trophy', name: 'Exam Questions' }
+                    ];
+                    
+                    for (const feature of features) {
+                        if (doc.features[feature.key]) {
+                            html += `
+                                <button class="feature-btn generated" onclick="viewFeature(${doc.features[feature.key].id}, '${feature.key}')">
+                                    <i class="fas fa-${feature.icon}"></i> View ${feature.name}
+                                </button>
+                            `;
+                        } else {
+                            html += `
+                                <button class="feature-btn" onclick="generateFeature(${doc.id}, '${feature.key}')">
+                                    <i class="fas fa-${feature.icon}"></i> Generate ${feature.name}
+                                </button>
+                            `;
+                        }
+                    }
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                html += '</div>';
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading documents:', error);
+                document.getElementById('documentsContainer').innerHTML = 
+                    '<p class="text-center" style="color: #f87171;">Error loading documents. Please try again.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
