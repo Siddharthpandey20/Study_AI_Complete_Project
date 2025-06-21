@@ -274,7 +274,7 @@ MIT License – See [LICENSE](./LICENSE)
 ## StudyAI Team
 - [@Siddharthpandey20](https://github.com/Siddharthpandey20)
 - [@Utkarsh240102](https://github.com/Utkarsh240102)
-- [@R.Akhil]
+- [@akhilll0305](https://github.com/akhilll0305)
 
 Open to contributions, collaborations, and innovation.  
 We believe AI should amplify human learning, not just automate it.
