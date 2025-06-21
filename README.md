@@ -276,6 +276,9 @@ MIT License – See [LICENSE](./LICENSE)
 - [@Utkarsh240102](https://github.com/Utkarsh240102)
 - [@R.Akhil]
 
-> Built with ❤️ by the **StudyAI Team**  
 Open to contributions, collaborations, and innovation.  
 We believe AI should amplify human learning, not just automate it.
+
+<div align="center">
+  <p>Made with ❤️ by the StudyAI Team</p>
+</div>
