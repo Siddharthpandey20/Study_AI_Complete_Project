@@ -132,3 +132,6 @@ venv.bak/
 
 # Downloaded sentence-transformers weights (doc_qna_routes.py)
 model_cache/
+
+# Document Q&A FAISS index written at runtime (doc_qna_routes.py)
+data/vector_db/

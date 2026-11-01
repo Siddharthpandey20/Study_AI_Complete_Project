@@ -263,28 +263,43 @@ def hybrid_search(query, all_splits, vector_store, top_n=10):
     print(f"🔍 Retrieved documents for query: {query}")
 
     try:
-        expanded_query = llm.invoke(f"Expand this search query while maintaining its core meaning: '{query}'")
+        expanded_query = llm.invoke(
+            "Rewrite this search query with a few extra relevant keywords. "
+            f"Reply with one line of plain text only: '{query}'"
+        )
         expanded_query = expanded_query.content if hasattr(expanded_query, "content") else str(expanded_query)
+        expanded_query = expanded_query.strip().splitlines()[0] if expanded_query.strip() else query
 
         results = []
         
-        # Get vector results
+        # Get vector results: the user's own question first, then the expansion.
+        # (Searching only with the expansion let verbose LLM output drown the query.)
         try:
-            vector_results = vector_store.similarity_search_with_score(expanded_query, k=top_n)
-            results.extend([doc for doc, score in vector_results])
+            for q in (query, expanded_query):
+                vector_results = vector_store.similarity_search_with_score(q, k=top_n)
+                results.extend([doc for doc, score in vector_results])
         except Exception as e:
             print(f"Vector search failed: {e}")
 
         # Get BM25 results if available
         if bm25_index and tokenized_corpus:
             try:
-                query_tokens = expanded_query.lower().split()
+                query_tokens = f"{query} {expanded_query}".lower().split()
                 scores = bm25_index.get_scores(query_tokens)
                 top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_n]
                 bm25_results = [all_splits[i] for i in top_indices if i < len(all_splits)]
                 results.extend(bm25_results)
             except Exception as e:
                 print(f"BM25 search failed: {e}")
+
+        # Drop duplicates (the same chunk can come from several searches), keep order
+        seen, unique = set(), []
+        for doc in results:
+            key = getattr(doc, "page_content", str(doc))
+            if key not in seen and key != "Placeholder document":
+                seen.add(key)
+                unique.append(doc)
+        results = unique
 
         print(f"📊 Found {len(results)} relevant documents")
         return results[:top_n]
@@ -314,7 +329,9 @@ def process_file(file_path, filename):
             processing_status[filename] = "failed"
             return
         
-        processed_docs = process_extracted_text(docs[0].page_content)
+        # extract_text_from_source already returns 600-char chunks; index all of
+        # them (previously only docs[0], the first chunk, was kept).
+        processed_docs = [d for d in docs if d.page_content and d.page_content.strip()]
         
         if not processed_docs:
             print(f"❗ No valid content chunks were generated from {filename}")
@@ -387,7 +404,9 @@ def create_doc_qna_routes(app: FastAPI):
                     "message": "No content could be extracted from the URL"
                 })
             
-            processed_docs = process_extracted_text(docs[0].page_content)
+            # extract_text_from_source already returns 600-char chunks; index all of
+            # them (previously only docs[0], the first chunk, was kept).
+            processed_docs = [d for d in docs if d.page_content and d.page_content.strip()]
             
             if processed_docs:
                 doc_count = add_to_vector_store(processed_docs, source_id=url)
