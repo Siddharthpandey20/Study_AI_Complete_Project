@@ -19,7 +19,7 @@ try:
         raise ValueError("GEMINI_API_KEY environment variable is required")
     
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel(os.getenv("GEMINI_MODEL", "gemini-flash-latest"))
     AI_AVAILABLE = True
 except Exception as e:
     print(f"Warning: AI model not available: {e}")

@@ -49,7 +49,7 @@ if not gemini_api_key:
 genai.configure(api_key=gemini_api_key)
 
 # Initialize LLM
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=gemini_api_key)
+llm = ChatGoogleGenerativeAI(model=os.getenv("GEMINI_MODEL", "gemini-flash-latest"), google_api_key=gemini_api_key)
 
 # Create cache directory
 cache_dir = os.path.join(os.path.dirname(__file__), "model_cache")

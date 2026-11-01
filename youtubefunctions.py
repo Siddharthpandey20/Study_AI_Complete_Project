@@ -10,7 +10,7 @@ if not GOOGLE_API_KEY:
     raise ValueError("GEMINI_API_KEY environment variable is required")
 
 genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel(os.getenv("GEMINI_MODEL", "gemini-flash-latest"))
 
 # Lazy load heavy dependencies
 _whisper_model = None
