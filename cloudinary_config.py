@@ -61,6 +61,36 @@ async def upload_file_to_cloudinary(file_content: bytes, filename: str, user_id:
         print(f"❌ Cloudinary upload error: {str(e)}")
         raise Exception(f"Failed to upload file: {str(e)}")
 
+def fetch_cloudinary_file(url: str, headers=None, timeout: int = 30) -> requests.Response:
+    """GET a stored file, falling back to Cloudinary's signed download API.
+
+    Cloudinary blocks public delivery of PDF and ZIP files by default on new
+    accounts, so the public URL returns 401. The signed download endpoint is
+    authenticated with the API key and secret, so it works either way.
+    """
+    import re
+    import cloudinary.utils
+
+    response = requests.get(url, headers=headers, timeout=timeout)
+    if response.status_code not in (401, 403):
+        return response
+
+    match = re.match(
+        r"https?://res\.cloudinary\.com/[^/]+/(image|raw|video)/(upload|private|authenticated)/(?:v\d+/)?(.+)$",
+        url,
+    )
+    if not match:
+        return response
+    resource_type, delivery_type, path = match.groups()
+    public_id, file_format = path, ""
+    if resource_type != "raw" and "." in path.rsplit("/", 1)[-1]:
+        public_id, file_format = path.rsplit(".", 1)
+    signed_url = cloudinary.utils.private_download_url(
+        public_id, file_format, resource_type=resource_type, type=delivery_type
+    )
+    return requests.get(signed_url, timeout=timeout)
+
+
 def delete_file_from_cloudinary(public_id: str):
     """Delete file from Cloudinary"""
     try:
@@ -76,7 +106,7 @@ async def download_file_from_cloudinary(url: str) -> str:
         # Import extraction functions here to avoid circular imports
         from functions import extract_text_from_pdf, extract_text_from_docx
         
-        response = requests.get(url)
+        response = fetch_cloudinary_file(url)
         response.raise_for_status()
         
         # Determine file type and extract text

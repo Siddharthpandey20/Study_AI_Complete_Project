@@ -30,7 +30,7 @@ from auth import (
     exchange_code_for_token,
     get_user_info_from_token
 )
-from cloudinary_config import upload_file_to_cloudinary, download_file_from_cloudinary
+from cloudinary_config import upload_file_to_cloudinary, download_file_from_cloudinary, fetch_cloudinary_file
 import json
 import os
 import secrets
@@ -750,7 +750,7 @@ async def get_document_content(document: UserDocument) -> str:
             'Accept': '*/*'
         }
         
-        response = requests.get(document.cloudinary_url, headers=headers, timeout=30)
+        response = fetch_cloudinary_file(document.cloudinary_url, headers=headers, timeout=30)
         response.raise_for_status()
         
         # Simple content extraction based on file type
@@ -845,7 +845,7 @@ async def get_group_document_content(document: GroupDocument) -> str:
             'Accept': '*/*'
         }
         
-        response = requests.get(document.cloudinary_url, headers=headers, timeout=30)
+        response = fetch_cloudinary_file(document.cloudinary_url, headers=headers, timeout=30)
         response.raise_for_status()
         
         if document.file_type.lower() == 'pdf':
@@ -1444,7 +1444,7 @@ async def get_group_document_content(document: GroupDocument) -> str:
         }
         
         print(f"🔍 Attempting to fetch document: {document.cloudinary_url}")
-        response = requests.get(document.cloudinary_url, headers=headers, timeout=30)
+        response = fetch_cloudinary_file(document.cloudinary_url, headers=headers, timeout=30)
         print(f"📡 Response status: {response.status_code}")
         
         # If we get a 401, it means the URL is secured - use fallback content
