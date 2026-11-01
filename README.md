@@ -13,6 +13,13 @@
   <img src="https://img.shields.io/badge/Auth-Google_OAuth_2.0-4285F4?logo=google&logoColor=white" alt="Google OAuth 2.0">
 </p>
 
+<p align="center">
+  <a href="https://drive.google.com/file/d/1bq5EJROvsifbRsGJLoaQP4rgihgUSnEp/view?usp=sharing">
+    <img src="docs/assets/demo-thumbnail.jpg" alt="Watch the StudyAI demo video (2:22)" width="720">
+  </a>
+</p>
+<p align="center"><em>Demo video (2:22): flashcards, quizzes, mind maps, revision notes, learning paths, exam questions, document Q&amp;A and study groups.</em></p>
+
 Built by a three-person team for the APIHub Hackathon 2025, where it placed third.
 
 ---
