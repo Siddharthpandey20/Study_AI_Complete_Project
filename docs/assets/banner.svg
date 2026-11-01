@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="StudyAI: study material from your own documents">
+  <rect width="1280" height="320" fill="#1e1b4b"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <rect x="860" y="62" width="150" height="88" rx="10" fill="#f8fafc"/>
+    <text x="935" y="100" fill="#1e1b4b" font-size="14" font-weight="600" text-anchor="middle">What is the</text>
+    <text x="935" y="120" fill="#1e1b4b" font-size="14" font-weight="600" text-anchor="middle">convoy effect?</text>
+    <rect x="1030" y="62" width="150" height="88" rx="10" fill="#fbbf24"/>
+    <text x="1105" y="102" fill="#1e1b4b" font-size="14" font-weight="600" text-anchor="middle">Aging prevents</text>
+    <text x="1105" y="122" fill="#1e1b4b" font-size="14" font-weight="600" text-anchor="middle">starvation</text>
+    <rect x="860" y="170" width="320" height="88" rx="10" fill="#312e81" stroke="#6366f1" stroke-width="2"/>
+    <circle cx="905" cy="214" r="18" fill="#6366f1"/>
+    <line x1="923" y1="214" x2="990" y2="190" stroke="#a5b4fc" stroke-width="2"/>
+    <line x1="923" y1="214" x2="990" y2="238" stroke="#a5b4fc" stroke-width="2"/>
+    <rect x="990" y="178" width="96" height="24" rx="6" fill="#a5b4fc"/>
+    <rect x="990" y="226" width="120" height="24" rx="6" fill="#a5b4fc"/>
+    <text x="72" y="140" fill="#f8fafc" font-size="56" font-weight="700">StudyAI</text>
+    <rect x="72" y="166" width="64" height="4" fill="#fbbf24"/>
+    <text x="72" y="212" fill="#c7d2fe" font-size="22">Flashcards, quizzes, mind maps and grounded Q&amp;A</text>
+    <text x="72" y="242" fill="#c7d2fe" font-size="22">generated from your own notes, shared in study groups</text>
+  </g>
+</svg>

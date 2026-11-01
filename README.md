@@ -1,284 +1,188 @@
-# 🚀 StudyAI – The Ultimate AI-Powered Learning Companion  
-*Transforming passive content into active learning with AI-first design*
-
 <p align="center">
-  <img src="https://img.shields.io/badge/Built_with-FastAPI-0a9396?style=flat-square&logo=fastapi&logoColor=white">
-  <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square">
-  <img src="https://img.shields.io/badge/AI_Integration-Gemini%20%26%20Langchain-yellow?style=flat-square&logo=openai">
-  <img src="https://img.shields.io/badge/Cloud-Cloudinary%20%7C%20OAuth2%20Login-orange?style=flat-square">
+  <img src="docs/assets/banner.svg" alt="StudyAI" width="100%">
 </p>
 
-## 📚 Project Overview
+<p align="center">
+  A FastAPI study platform that turns uploaded notes into flashcards, quizzes, mind maps, learning paths, revision notes and likely exam questions, answers questions about a document through hybrid retrieval, and lets study groups share both.
+</p>
 
-StudyAI is a comprehensive AI-powered learning platform designed to revolutionize how students interact with educational content. By leveraging advanced AI technology, StudyAI transforms static study materials into dynamic, interactive learning resources that adapt to individual learning styles. It provides secure authentication, personal document storage, and collaborative study group features, making it a complete learning ecosystem.
+<p align="center">
+  <img src="https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/LangChain-FAISS%20%2B%20BM25-1C3C3C" alt="LangChain, FAISS and BM25">
+  <img src="https://img.shields.io/badge/Google_Gemini-8E75B2?logo=googlegemini&logoColor=white" alt="Google Gemini">
+  <img src="https://img.shields.io/badge/Auth-Google_OAuth_2.0-4285F4?logo=google&logoColor=white" alt="Google OAuth 2.0">
+</p>
 
-## 🔍 Problem Statement: Open Innovation in Education
+Built by a three-person team for the APIHub Hackathon 2025, where it placed third.
 
-The educational technology landscape faces a critical challenge: despite the abundance of digital learning tools, there remains a significant gap in solutions that can transform passive content consumption into active, personalized learning experiences. Existing tools often lack personalization, interactivity, and a unified approach to different content formats. This project addresses the need for open innovation by creating an integrated platform that empowers students to build their own learning pathways from any source material.
+---
 
-## 💡 Our Solution
+## Contents
 
-StudyAI addresses these challenges through open innovation by:
+- [Problem](#problem)
+- [What it does](#what-it-does)
+- [Screenshots](#screenshots)
+- [Architecture](#architecture)
+- [Engineering decisions](#engineering-decisions)
+- [Feature status](#feature-status)
+- [Local setup](#local-setup)
+- [Limitations](#limitations)
+- [Team](#team)
 
-1.  **Content Transformation:** Converting static educational materials (PDFs, videos, text) into a suite of interactive learning experiences.
-2.  **Multi-modal Learning:** Supporting various learning styles through diverse content formats like flashcards, mind maps, and summaries, all generated from a single source.
-3.  **Unified Platform:** Providing a complete suite of AI-powered study tools in one application, eliminating the need for multiple, disconnected services.
-4.  **Secure & Collaborative:** Provides secure user authentication via Google and enables collaborative learning through study groups where documents and AI-generated materials can be shared and saved.
-5.  **Accessibility:** Making advanced AI learning technology available to all students regardless of their technical background, fostering a more inclusive educational environment.
+## Problem
 
-## ✨ Key Features
+Students revise from their own material: lecture slides, PDFs, notes, recorded lectures. Turning that into active-recall practice (flashcards, self-tests, a revision plan) is slow, so most revision ends up as re-reading. General chatbots can generate questions, but they do not stay grounded in the student's own document, do not keep what they generated, and do not support studying with classmates.
 
--   **🔐 Secure Authentication & User Accounts**: Login securely with your Google account to save your documents, track your generated content, and manage your learning materials across sessions.
--   **👥 Collaborative Study Groups**: Create or join study groups to share documents with peers. All AI-generated content (flashcards, quizzes, etc.) is automatically saved and shared within the group, fostering a collaborative learning environment.
--   **🧠 Smart Flashcards Generator**: AI-powered flashcards with adaptive difficulty levels.
--   **🗺️ Interactive Mind Map Creator**: Visualize complex topics with auto-generated mind maps.
--   **🚀 Personalized Learning Path**: Step-by-step guides tailored to your materials.
--   **📝 Smart Sticky Notes**: Color-coded notes organized by importance.
--   **🏆 Exam Booster**: Practice questions with probability scores for exam likelihood.
--   **📺 YouTube Summarizer**: Convert videos into comprehensive text summaries.
--   **💬 Document Q&A Chat**: Have interactive conversations about your uploaded documents.
+## What it does
 
-## 🔧 Project Structure
+- **Six generators from one upload.** For an uploaded PDF, DOCX or text file, Gemini produces flashcards with difficulty levels, multiple-choice questions, a hierarchical mind map, a step-by-step learning path with prerequisites and time estimates, colour-coded revision notes by priority, and likely exam questions with a probability score. Each prompt asks for structured JSON that the frontend renders directly.
+- **Everything is saved.** Uploaded files go to Cloudinary. Each document and each generated feature is a row in SQL (SQLAlchemy, 7 tables), so a user can reopen past results instead of regenerating them.
+- **Document Q&A.** A separate chat page indexes uploaded files, web pages or images into FAISS (dense, `all-MiniLM-L6-v2`) and BM25 (sparse), retrieves passages for each question, and has Gemini answer only from that context. It declines questions the document does not cover.
+- **Study groups.** A user creates a group and shares its 8-character key. Members upload documents to the group, generate any feature on any group document, and see what others have generated.
+- **YouTube summaries.** The transcript is fetched with `youtube-transcript-api` and summarised into a structured study guide. If a video has no transcript, the audio is downloaded with `yt-dlp` and transcribed with Whisper.
+- **Google sign-in** through OAuth 2.0, with a signed JWT session cookie.
 
+## Screenshots
+
+All screenshots were captured from a local run on a two-page set of operating-systems notes (CPU scheduling). Every result shown was generated live by the app from that file.
+
+| Flashcards | Mind map |
+|---|---|
+| ![Flashcards generated from CPU scheduling notes](docs/assets/screenshots/flashcards.jpg) | ![Mind map of CPU scheduling concepts](docs/assets/screenshots/mind-map.jpg) |
+| **Revision notes by priority** | **Document Q&A** |
+| ![Colour-coded revision notes](docs/assets/screenshots/sticky-notes.jpg) | ![Grounded answers about aging and the FCFS convoy effect](docs/assets/screenshots/document-qa.jpg) |
+
+<p align="center">
+  <img src="docs/assets/screenshots/study-group.jpg" alt="Study group page with shared document, generated flashcards and members" width="80%">
+</p>
+<p align="center"><em>Study group: a document uploaded by one member, flashcards generated by another, and the group key for inviting others.</em></p>
+
+## Architecture
+
+```mermaid
+flowchart LR
+    B["Browser<br/>Jinja2 templates + vanilla JS"] --> APP
+
+    subgraph APP["FastAPI app (main.py)"]
+        direction TB
+        AUTH["Google OAuth + JWT cookie<br/>auth.py"]
+        GEN["Generators<br/>functions.py"]
+        GRP["Study groups"]
+        YT["YouTube summariser<br/>youtubefunctions.py"]
+        QA["Document Q&A<br/>doc_qna_routes.py"]
+    end
+
+    APP --> DB[("SQLite or any SQLAlchemy URL<br/>users, documents, features, groups")]
+    GEN & GRP <--> CLD[("Cloudinary<br/>uploaded files")]
+    GEN & YT & QA -.-> GEM[("Google Gemini")]
+    YT -.-> YTS[("YouTube transcripts<br/>yt-dlp + Whisper fallback")]
+    QA --> IDX[("FAISS + BM25 index<br/>data/vector_db")]
+    AUTH -.-> GOOG[("Google OAuth")]
 ```
-study_ai_complete/
-├── main.py                   # FastAPI main application, handles routing
-├── run.py                    # Application startup script (Uvicorn)
-├── functions.py              # Core AI generation logic for most features
-├── youtubefunctions.py       # Functions for YouTube video processing
-├── doc_qna_routes.py         # API routes for the Document Q&A feature
-├── function_for_DOC_QNA.py   # Backend logic for Document Q&A
-├── database.py               # SQLAlchemy models and database session setup
-├── auth.py                   # Google OAuth authentication and user management
-├── init_db.py                # Script to initialize the database schema
-├── static/                   # Frontend static assets
-│   ├── css/
-│   │   ├── style.css         # Main stylesheet for the homepage
-│   │   └── feature-pages.css # Styles for individual feature pages
-│   └── js/
-│       ├── script.js         # Main JavaScript for homepage interactions
-│       └── feature-pages.js  # JS for feature pages (upload, generation)
-├── templates/                # Jinja2 HTML templates
-│   ├── index.html            # Homepage
-│   ├── flashcards.html       # Flashcards feature page
-│   ├── mindmap.html          # Mind Map feature page
-│   ├── learning-path.html    # Learning Path feature page
-│   ├── sticky-notes.html     # Sticky Notes feature page
-│   ├── exam-booster.html     # Exam Booster feature page
-│   ├── youtube-summarizer.html # YouTube Summarizer page
-│   ├── doc-chat.html         # Document Q&A chat interface
-│   ├── groups.html           # Study Groups listing page
-│   └── group-detail.html     # Page for a specific study group
-└── whisper-main/             # OpenAI Whisper integration for audio transcription
-```
 
-## 🌟 What Makes StudyAI Different?
+**Generating a feature:** the browser uploads the file to `/api/upload-document`, which stores it in Cloudinary and records a `UserDocument`. It then calls `/api/generate-<feature>-auth` with the document id. The server downloads the file, extracts text with PyPDF2 or python-docx, prompts Gemini for JSON, saves the result as a `GeneratedFeature`, and returns it.
 
-StudyAI isn’t just another AI assistant wrapped in a UI. It’s a complete **AI-native learning ecosystem**—designed to transform *your* materials into engaging, intelligent, and shareable study experiences. Here’s how it goes beyond the competition:
+**Answering a question:** files uploaded on the Q&A page are extracted (pdfplumber for PDFs, EasyOCR for images, Playwright for JavaScript-rendered pages) in a background thread and split into 600-character chunks with 100 characters of overlap. Each chunk is embedded into FAISS and added to a BM25 index. For a question, the app runs dense search with the question itself and with a one-line LLM rewrite of it, adds BM25 matches, removes duplicates, and sends the top passages to Gemini with an instruction to answer only from them.
 
----
+## Engineering decisions
 
-### ✅ 1. **Collaborative Learning, Not Just Solo Use**
-> 💬 "Other AI tools help individuals. We built a system for teams."
+- **Hybrid retrieval.** Dense embeddings catch paraphrases; BM25 catches exact terms such as algorithm names, formulas and acronyms (SJF, MLFQ) that small embedding models blur. Results from both are merged before generation.
+- **Query rewriting without losing the question.** The LLM rewrite adds related keywords, but the user's own question is always searched first. An earlier version searched only with the rewrite, which came back as several paragraphs and pulled retrieval off-topic.
+- **Structured JSON from the model.** Each generator asks Gemini for a fixed JSON shape, and the frontend renders that shape directly (flip cards, a node graph, priority-coloured notes) instead of free text.
+- **Persist, do not regenerate.** Saving each generated feature against its document makes results reusable, lets group members see each other's work, and avoids paying for the same generation twice.
+- **Signed download fallback.** Cloudinary blocks public delivery of PDFs on new accounts. When the public URL is refused, the server fetches the file through Cloudinary's signed download API instead.
+- **Rule-based fallbacks.** If Gemini is unavailable, the generators return simpler rule-based output built from the document's text, so the interface still works.
 
-With **built-in study groups**, users don’t just consume AI outputs—they **co-create, co-learn, and co-revise**.
+## Feature status
 
-🛠️ **How it works:**
-- Every user can join or create a group via a **secure key**.
-- Uploaded files and AI-generated outputs (flashcards, mind maps, quizzes) are auto-synced to the group.
-- Group members view, update, and discuss content collaboratively.
+What was exercised end to end in a local run (November 2026) with live Gemini and Cloudinary credentials:
 
----
+| Area | Status |
+|---|---|
+| Upload to Cloudinary and all six generators | Tested in the browser and through the API |
+| Document Q&A on a PDF (indexing, retrieval, grounded answers, refusal when off-topic) | Tested in the browser and through the API |
+| Study groups: create, join by key, shared upload and generation, member roles | Tested with two accounts |
+| YouTube summary from a transcript | Tested |
+| Google OAuth sign-in | Redirect to Google tested; the screenshots use a local test account with a session signed by the app's own `create_access_token`, not a full Google sign-in |
+| YouTube video title and duration | Not working: the pinned `yt-dlp` (2025.6.9) can no longer read YouTube metadata, so they show as "YouTube Video" and "Unknown" |
+| Whisper fallback for videos without transcripts | Not tested (downloads the 1.5 GB `medium` model on first use) |
+| Audio files on the Q&A page | Disabled in code (`whisper_model = None`) |
 
-### ✅ 2. **Persistence: Every Output Tied to Every Input**
-> 🗂️ "Other tools generate and forget. We track everything."
-
-Every document uploaded in StudyAI is associated with its **own persistent database record** of generated and ungenerated features.
-
-🛠️ **How it works:**
-- On upload, a **UserDocument** or **GroupDocument** is created.
-- AI-generated content (e.g., flashcards, mind maps) is stored as `GeneratedFeature` rows in SQL.
-- If a user revisits a document, we show them:
-  - ✅ What’s already generated  
-  - 🟡 What’s still available to generate  
-  - 🔁 Option to regenerate and compare
-
-📌 This persistence enables:
-- Smart dashboards
-- Regeneration history
-- Feature completeness tracking per file
-
----
-
-### ✅ 3. **From Raw Uploads to Rich Outputs — Seamlessly**
-> 📚 "We don’t give you pre-built content. We transform your own files."
-
-StudyAI accepts:
-- 📄 PDFs / DOCX
-- 🖼️ Images with text
-- 🎙️ Audio (lectures)
-- 📺 YouTube videos
-- 🌐 Raw text or URLs
-
-Every type is **parsed, cleaned, and chunked** using specialized handlers (e.g., `pdfplumber`, `EasyOCR`, `Whisper`, `LangChain` loaders) for precise downstream AI generation.
-
----
-
-### ✅ 4. **Beyond Summaries: YouTube + AI for Real Learning**
-> 📺 "Most tools stop at the transcript. We start there."
-
-Our **YouTube pipeline** isn’t just about transcription:
-- Extracts or transcribes content
-- Summarizes intelligently
-- Offers:
-  - Flashcards
-  - Sticky Notes
-  - Exam Questions
-  - Document Chat (over video!)
-
-No other summarizer offers this breadth of **interactive tools** on top of YouTube content.
-
----
-
-### ✅ 5. **Context-Rich Mind Maps with True Structure**
-> 🗺️ "Other mind maps are just bubbles. Ours are blueprints."
-
-StudyAI mind maps reflect actual **concept hierarchy and flow**, with:
-- 🌐 Central and satellite node structure
-- 🎨 Semantic coloring and dynamic scaling
-- 📌 Interactive zoom/pan UI
-
-We use vector embeddings + keyword clustering to **prioritize and connect topics** accurately.
-
----
-
-### ✅ 6. **Conversational AI on Your Documents**
-> 💬 "Ask your documents anything—literally."
-
-We built a **retrieval-augmented chatbot** that:
-- Searches document chunks (FAISS + BM25)
-- Builds a Gemini prompt with only **high-relevance content**
-- Returns accurate, grounded answers
-
-Works across text, scanned notes, YouTube transcripts, and more.
-
----
-
-### ✅ 7. **UI That Feels Built for Students**
-> 🎨 "Not just JSON on a screen—this is crafted content."
-
-Our frontend is **highly visual and interactive**, featuring:
-- Flip-style flashcards 🎴
-- Node-linked mind maps 🧠
-- Probability-tagged exam questions 🧪
-- Color-coded sticky notes 🟩🟨🟥
-- Modal-based Q&A interfaces 💬
-- Study group dashboards 👥
-
-We chose **form AND function**—a UI that makes AI outputs not only understandable but engaging.
-
----
-
-### ✅ 8. **Simple. Secure. Scalable.**
-> 🔐 "OAuth + JWT + Cloudinary = zero barrier, full control."
-
-From day one:
-- Google OAuth2 for login
-- JWT for token-based auth
-- Role-based permissions (user/admin)
-- Secure upload handling via Cloudinary
-
-No unnecessary signups. No broken sessions. Just fast, safe access.
-
----
-
-### 🧠 Summary
-
-> **StudyAI is not a feature demo. It’s a fully integrated AI learning engine.**
-
-| Trait | Why It Stands Out |
-|------|--------------------|
-| ✅ AI-first design | AI isn’t an add-on—it’s the core |
-| 🧩 Modular system | From raw input to structured output |
-| 📌 Persistent learning | Track all features per file |
-| 🧠 Interactive UX | Crafted experience, not just responses |
-| 👥 Group support | Real collaboration, not just chatbots |
-
-## 🚀 Installation Guide
+## Local setup
 
 ### Prerequisites
--   Python 3.8 or higher
--   pip (Python package installer)
 
-### Setup Instructions
+- Python 3.12
+- A Google Cloud OAuth client (web application) with the redirect URI `http://localhost:8000/auth/callback`
+- A Cloudinary account
+- A Google Gemini API key
+
+### Install
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/Study_AI_Complete_Project-master.git
-cd Study_AI_Complete_Project-master
+git clone https://github.com/Siddharthpandey20/Study_AI_Complete_Project.git
+cd Study_AI_Complete_Project
 
-# 2. Set up a Python virtual environment (recommended)
 python -m venv venv
-# On Windows
-venv\Scripts\activate
-# On macOS/Linux
-source venv/bin/activate
+# Windows: venv\Scripts\activate
+# Linux/macOS: source venv/bin/activate
 
-# 3. Install Whisper dependencies
-cd whisper-main
+pip install -r requirements-lock.txt   # exact versions verified on Python 3.12
+pip install ./whisper-main             # bundled copy of OpenAI Whisper
+python -m playwright install chromium  # only needed for JavaScript-rendered URLs on the Q&A page
+```
 
-pip install .
+`requirements.txt` lists the same top-level packages with pinned versions. The lock file also pins every transitive dependency, which is the reliable route; unpinned LangChain 1.x removes imports this code uses.
 
-cd ..
+### Configure
 
-# 4. Install all other required packages
+Copy `.env.example` to `.env` and fill in:
 
-pip install -r requirements.txt
+| Variable | Purpose |
+|---|---|
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Google sign-in |
+| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | File storage |
+| `SECRET_KEY` | Signs session tokens |
+| `GEMINI_API_KEY` | All generation and Q&A |
+| `GEMINI_MODEL` | Optional; defaults to `gemini-flash-latest` |
+| `DATABASE_URL` | Optional; defaults to `sqlite:///./study_ai.db` |
 
-# 5. Run the application
+All of the first four rows are required at start-up.
 
+### Run
+
+```bash
 python run.py
 ```
 
-## 💎 Impact & Originality
+Open `http://localhost:8000`. The first start downloads the sentence-transformers and EasyOCR models, which takes a few minutes. API documentation is at `/docs`.
 
-| Criteria | Details |
-|---------|---------|
-| **AI-first Architecture** | Not a plugin, AI drives the core experience (Gemini, LangChain, FAISS) |
-| **End-to-End Platform** | Upload → Generate → Save → Share → Revise, all in one place |
-| **Multi-format Input Handling** | Audio, image, text, URL, YouTube supported |
-| **Conversational Retrieval** | GPT-style Q&A on your own materials |
-| **Group-Centric UX** | Innovates social learning inside AI platforms |
+### Demo walkthrough
 
-## 💻 Usage Guide
+1. Sign in with Google.
+2. On the home page, choose a PDF and click **Smart Revision Mode**, then **Mind Map Generator**, **Smart Sticky Notes** and **Exam Booster Mode**.
+3. Open **Document Q&A**, upload the same PDF, wait for "ready for questions", and ask about a detail from the second page.
+4. Open **Study Groups**, create a group, upload a document and generate flashcards inside the group.
 
-1.  **Sign In**: Securely log in using your Google account to access your personal dashboard.
-2.  **Upload or Join**: Upload your personal study documents or create/join a study group to collaborate on shared materials.
-3.  **Generate Features**: For any document, select an AI tool (e.g., Flashcards, Mind Map) to generate interactive study aids.
-4.  **Learn & Collaborate**: Your generated content is automatically saved and associated with the document. Access it anytime from your dashboard or view content generated by your group members.
+### Troubleshooting
 
+- **`GOOGLE_CLIENT_ID environment variable is required` at start-up:** `.env` is missing or not in the project root.
+- **`redirect_uri_mismatch` from Google:** add `http://localhost:8000/auth/callback` to the OAuth client's authorised redirect URIs.
+- **Generated content looks generic:** check the server log for `HTTP error accessing`. The app could not download the stored file, and the generators fell back to placeholder text (see [limitations](#limitations)).
+- **Document Q&A says no documents are available after a restart:** the saved index is only reloaded after the next upload, so upload the file again.
 
-## 📦 External Libraries, Frameworks, and APIs
+## Limitations
 
-- **Backend**: \`FastAPI\`, \`Uvicorn\`, \`SQLAlchemy\`, \`Jinja2\`, \`Authlib\`
-- **AI & LLM**: \`Google Gemini\`, \`LangChain\`, \`FAISS\`, \`Sentence Transformers\`, \`BM25\`, \`Whisper\`
-- **File Handling**: \`pdfplumber\`, \`PyMuPDF\`, \`yt-dlp\`, \`youtube-transcript-api\`, \`EasyOCR\`, \`Cloudinary\`
-- **Security**: \`OAuth2\`, \`python-jose\`, \`passlib\`, \`itsdangerous\`
+- **Document Q&A is not per-user.** Its routes do not require sign-in, and all uploads share one index that is cleared every hour. It suits a single-user demo, not a multi-user deployment.
+- **Placeholder content on download failure.** If a stored file cannot be fetched, the generators quietly fall back to generic study text built from the file name instead of returning an error.
+- **Each generator click re-uploads the file** to Cloudinary before generating.
+- **No automated tests** beyond the bundled Whisper package's own tests.
+- `routes_for_DOC_QNA.py` is an earlier standalone version of Document Q&A (including a LangGraph tool-calling agent). It is not imported by the app and depends on modules that are not in the repository.
 
-## 📜 License
+## Team
 
-MIT License – See [LICENSE](./LICENSE)
+- [Siddharthpandey20](https://github.com/Siddharthpandey20)
+- [Utkarsh240102](https://github.com/Utkarsh240102)
+- [akhilll0305](https://github.com/akhilll0305)
 
-### 👨‍💻 Acknowledgements
-
-## StudyAI Team
-- [@Siddharthpandey20](https://github.com/Siddharthpandey20)
-- [@Utkarsh240102](https://github.com/Utkarsh240102)
-- [@akhilll0305](https://github.com/akhilll0305)
-
-Open to contributions, collaborations, and innovation.  
-We believe AI should amplify human learning, not just automate it.
-
-<div align="center">
-  <p>Made with ❤️ by the StudyAI Team</p>
-</div>
+Built with [FastAPI](https://fastapi.tiangolo.com/), [LangChain](https://www.langchain.com/), [FAISS](https://github.com/facebookresearch/faiss), [rank-bm25](https://github.com/dorianbrown/rank_bm25), [Google Gemini](https://ai.google.dev/), [Cloudinary](https://cloudinary.com/), [EasyOCR](https://github.com/JaidedAI/EasyOCR) and [OpenAI Whisper](https://github.com/openai/whisper).
