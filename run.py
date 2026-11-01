@@ -4,6 +4,15 @@ import sys
 import subprocess
 import time
 
+# Status messages contain emoji; avoid UnicodeEncodeError on Windows consoles and
+# redirected output. The uvicorn reload worker inherits PYTHONIOENCODING.
+os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8")
+    except (AttributeError, ValueError):
+        pass
+
 def create_directories():
     """Create necessary directories"""
     directories = ['static', 'templates', 'uploads']

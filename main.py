@@ -1,3 +1,17 @@
+import sys
+
+# Several modules print emoji at import time; avoid UnicodeEncodeError on Windows
+# consoles and redirected output (e.g. `uvicorn main:app > log.txt`).
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8")
+    except (AttributeError, ValueError):
+        pass
+
+# Load .env before importing modules that read environment variables at import time
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI, File, UploadFile, HTTPException, Form, Request, Depends
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
