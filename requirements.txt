@@ -1,45 +1,46 @@
-fastapi
-uvicorn
-python-multipart
-google-generativeai
-PyPDF2
-python-docx
-pandas
-Jinja2
-aiofiles
+# Versions pinned to what resolved on 2025-06-22 (the last commit date) and were
+# verified to start the app on Python 3.12. LangChain 1.x removes imports this code uses.
+fastapi==0.115.13
+uvicorn==0.34.3
+python-multipart==0.0.20
+google-generativeai==0.8.5
+PyPDF2==3.0.1
+python-docx==1.2.0
+pandas==2.3.0
+Jinja2==3.1.6
+aiofiles==24.1.0
 
 # YouTube functionality dependencies
-yt-dlp
-youtube-transcript-api
+yt-dlp==2025.6.9
+youtube-transcript-api==1.1.0
 
 # Document Q&A dependencies
-langchain
-langchain-google-genai
-langchain-community
-faiss-cpu
-sentence-transformers
-beautifulsoup4
-pdfplumber
-easyocr
-playwright
-rank-bm25
-python-dotenv
-pillow
-numpy
+langchain==0.3.26
+langchain-google-genai==2.0.10
+langchain-community==0.3.26
+faiss-cpu==1.11.0
+sentence-transformers==4.1.0
+beautifulsoup4==4.13.4
+pdfplumber==0.11.7
+easyocr==1.7.2
+playwright==1.52.0
+rank-bm25==0.2.2
+python-dotenv==1.0.0
+pillow==11.2.1
+numpy==2.2.6
 
 # Authentication dependencies
-authlib
-python-jose[cryptography]
-passlib[bcrypt]
+authlib==1.6.0
+httpx==0.28.1  # required by authlib's Starlette OAuth client
+python-jose[cryptography]==3.5.0
+passlib[bcrypt]==1.7.4
 
 # Database and storage
-sqlalchemy
-alembic
-cloudinary
+sqlalchemy==2.0.41
+alembic==1.16.2
+cloudinary==1.44.1
 
 # Session management
-itsdangerous
-PyJWT==2.8.0 
-passlib[bcrypt]==1.7.4 
-python-dotenv==1.0.0 
+itsdangerous==2.2.0
+PyJWT==2.8.0
 bcrypt==4.0.1

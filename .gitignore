@@ -129,3 +129,6 @@ venv.bak/
 *.rbc
 /.config
 /coverage/
+
+# Downloaded sentence-transformers weights (doc_qna_routes.py)
+model_cache/
