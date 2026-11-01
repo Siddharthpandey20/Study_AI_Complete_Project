@@ -104,7 +104,6 @@ What was exercised end to end in a local run (November 2026) with live Gemini an
 | Study groups: create, join by key, shared upload and generation, member roles | Tested with two accounts |
 | YouTube summary from a transcript | Tested |
 | Google OAuth sign-in | Redirect to Google tested; the screenshots use a local test account with a session signed by the app's own `create_access_token`, not a full Google sign-in |
-| YouTube video title and duration | Not working: the pinned `yt-dlp` (2025.6.9) can no longer read YouTube metadata, so they show as "YouTube Video" and "Unknown" |
 | Whisper fallback for videos without transcripts | Not tested (downloads the 1.5 GB `medium` model on first use) |
 | Audio files on the Q&A page | Disabled in code (`whisper_model = None`) |
 
